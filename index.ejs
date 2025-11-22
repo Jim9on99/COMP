@@ -1,0 +1,36 @@
+<%- include('partials/header') %>
+<h2>My Tasks</h2>
+<a href="/tasks/create" class="btn">+ New Task</a>
+
+<!-- Search Filters (Bonus) -->
+<form class="filter-form">
+  <input type="text" name="title" placeholder="Search title" value="<%= query.title || '' %>">
+  <select name="status">
+    <option value="">All Status</option>
+    <option value="pending" <%= query.status==='pending' ? 'selected' : '' %>>Pending</option>
+    <option value="in-progress" <%= query.status==='in-progress' ? 'selected' : '' %>>In Progress</option>
+    <option value="completed" <%= query.status==='completed' ? 'selected' : '' %>>Completed</option>
+  </select>
+  <button type="submit">Filter</button>
+</form>
+
+<table>
+  <thead><tr><th>Title</th><th>Status</th><th>Priority</th><th>Due</th><th>Actions</th></tr></thead>
+  <tbody>
+    <% tasks.forEach(task => { %>
+      <tr>
+        <td><%= task.title %></td>
+        <td><span class="status <%= task.status %>"><%= task.status %></span></td>
+        <td><%= task.priority %></td>
+        <td><%= task.dueDate ? task.dueDate.toISOString().split('T')[0] : '-' %></td>
+        <td>
+          <a href="/tasks/edit/<%= task._id %>">Edit</a>
+          <form style="display:inline" method="POST" action="/tasks/delete/<%= task._id %>">
+            <button type="submit" onclick="return confirm('Delete?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<%- include('partials/footer') %>
